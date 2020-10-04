@@ -1,12 +1,15 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
+import classes from './ContactList.module.scss';
 
 export default class Contact extends Component {
   render() {
+    const {contact} = this.props;
     return (
-      <Fragment>
-        <h3>{this.props.contacts.name}</h3>
-        <span>{this.props.contacts.surname}</span>
-      </Fragment>
+      <li className={classes.users} 
+          onClick={() => this.props.onSelect(contact)}>
+        <i className="fas fa-user"></i>
+        <h3>{`${contact.name} ${contact.surname}`}</h3>
+      </li>
     )
   }
 }
