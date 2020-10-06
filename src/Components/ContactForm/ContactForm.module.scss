@@ -9,6 +9,7 @@
   overflow: hidden;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
+  pointer-events: s;
   background: #fff;
 
   .ContactFormWrapper {
@@ -85,7 +86,7 @@
   width: 600px;
   overflow: hidden;
   top: 414px;
-  left: 4px;
+  left: -30px;
   transform: rotate(40deg);
   z-index: 10;
   opacity: .7;
@@ -95,4 +96,10 @@
   display: flex;
   width: 100%;
   justify-content: space-between;
+  .decline {
+    &:hover{
+      color: #a32525;
+    }
+  }
 }
+

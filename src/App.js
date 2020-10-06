@@ -5,130 +5,128 @@ import ContactList from './Components/ContactList/ContactList';
 import ContactForm from './Components/ContactForm/ContactForm';
 
 export default class App extends Component {
-  state = {
-    currentContact: this.getTemplateContact(),
-    allContacts: [],
+  constructor(){
+    super();
+      this.state = {
+        currentContact: this.getContactTemplate(),
+        contacts: [],
+    }; 
   }
 
-  componentDidMount() {
+componentDidMount(){
     this.setState({
-      allContacts:this.getLocalStateFromData()
-    })
-  }
+        contacts: this.getStateFromData()
+    });
+};
 
-  getTemplateContact() {
+getContactTemplate() {
     return {
-      name: "",
-      surname: "",
-      phone: "",
-      mail: "" 
+      name: '',
+      surname: '',
+      phone: '',
+      mail: ''
+    };
+};
+
+handleInput = ({target}) => {
+  const value = target.value;
+  this.setState({
+    currentContact:{
+      ...this.state.currentContact,
+      [target.name]: value
     }
-  }
+  })
+};
 
-  saveState(contact) {
-    localStorage.setItem('contacts', JSON.stringify(contact))
-  }
+onContactSelect = (contact) => {
+  this.setState({
+    currentContact: contact,
+  });
+};
 
-  getLocalStateFromData() {
-    const data = localStorage.getItem('contacts');
-      return data ? JSON.parse(data) : [];
-  }
+onClear = () => {
+  this.setState({
+    currentContact: this.getContactTemplate()
+  })
+};
 
-  handleInput = ({ target }) => {
-    this.setState({
-        currentContact:{
-          ...this.state.currentContact,
-          [target.name]: target.value
-        }
-    })
-  }
+onDelete = (contact) => {
+  this.setState((state) => {
+    const contacts = state.contacts.filter((el) => el !== contact);
+      this.saveState(contacts);
+        return {
+          contacts,
+          currentContact: this.getContactTemplate()
+        };
+    });
+};
 
-  createContact = (contact) => {
-    contact.id = Date.now();
+deleteContact = () => {
+  return this.onDelete(this.state.currentContact);
+}
+
+onSave = (contact) => {
+    contact.id 
+      ? this.updateContact(contact)
+      : this.createContact(contact)
+    this.saveState(contact);
+};
+
+addContact = (e) => {
+  e.preventDefault(); 
+  if( this.state.currentContact.name && this.state.currentContact.surname !== '') {
+    return this.onSave(this.state.currentContact);
+  }
+}
+
+createContact(contact) {
+  contact.id = Date.now();
     this.setState((state) => {
       const contacts = [...state.contacts, contact];
-        this.saveState(contact);
+        this.saveState(contacts);
           return {
             contacts,
             currentContact: contact,
-          }
-    })
-  }
+        };
+    });
+};
 
-  updateContact = (contact) => {
-    this.setState((state) => {
-      const contacts = state.contacts.map((el) => {
-        return el.id === contact.id ? contact : el
-      });
-        this.saveState(contacts);
+updateContact(contact) {
+  this.setState((state) => {
+    const contacts = state.contacts.map((el) => {
+      return el.id === contact.id ? contact : el
+    })
+      this.saveState(contacts);
         return {
           contacts,
-          currentContact: contact
-        }
-    })
-  }
+          currentContact: contact,
+      };
+    });
+};
 
-  onClear = () => {
-    this.setState({
-      currentContact: this.getTemplateContact()
-    })
-  }
+saveState(contacts) {
+  return localStorage.setItem('contacts', JSON.stringify(contacts));
+};
 
-  onSave = (contact) => {
-    if(contact.id) {
-      this.updateContact(contact)
-    } else {
-      this.createContact(contact)
-    }
-    this.saveState(contact);
-  }
+getStateFromData() {
+  const data = localStorage.getItem('contacts');
+    return data ? JSON.parse(data) : [];
+};
 
-  onSelect = (contact) => {
-    this.setState({
-      currentContact: contact
-    })
-  }
-
-  onDelete = (contact) => {
-    this.setState((state) => {
-      const contacts = state.allContacts.filter((el) => el !== contact);
-        this.saveState(contacts);
-        return {
-          contacts,
-          currentContact:this.getTemplateContact()
-        }
-    })
-  }
-
-  onFormSubmit = e => {
-    e.preventDefault();
-    this.onSave(this.state.currentContact);
-  }
-
-  onFormChange = changes => {
-    this.setState({
-      currentContact:{
-        ...this.state.currentContact,
-        ...changes
-      }
-    })
-  }
-
-  render(){
-    return (
-      <Wrapper>
-        <ContactList 
-          contacts={this.state.allContacts}
-          onClear={this.onClear}
-          onSelect={this.onSelect}
-        />
-        <ContactForm
-          contact={this.state.currentContact}
-          onChangeInput={this.handleInput}
-          onFormSubmit={this.onFormSubmit}
-          onDelete={this.onDelete}
-          onChange={this.onFormChange}
-        />
+render(){
+  return (
+    <Wrapper>
+      <ContactList 
+        contacts={this.state.contacts}
+        onSelect={this.onContactSelect}
+        onClear={this.onClear}
+      />
+      <ContactForm
+        contact={this.state.currentContact}
+        onDelete={this.deleteContact}
+        onFormSubmit={this.addContact}
+        handleInput={this.handleInput}
+      />
       </Wrapper>
     );
   }
