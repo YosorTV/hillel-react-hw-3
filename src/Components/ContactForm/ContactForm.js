@@ -51,17 +51,6 @@ export default class ContactForm extends Component {
             onChange={this.props.handleInput}
           />
           </label>
-
-          <label htmlFor="mail">Email:
-          <input 
-            type="email" 
-            id="mail"
-            name="mail"
-            placeholder="Enter email"
-            value={this.props.contact.mail}
-            onChange={this.props.handleInput}
-          />
-          </label>
         
       </div>
       <div className={classes.btnWrapper}>

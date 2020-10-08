@@ -2,14 +2,13 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
   margin: 0 auto;
+  height: 100%;
   padding: 24px;
   position: relative;
   overflow: hidden;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
-  pointer-events: s;
   background: #fff;
 
   .ContactFormWrapper {
@@ -74,22 +73,22 @@
   height: 400px;
   width: 400px;
   overflow: hidden;
-  top: -180px;
-  left: 320px;
+  top: -120px;
+  left: 280px;
   transform: rotate(135deg);
   opacity: .8;
 }
 
 .petal2 {
   position: absolute;
-  height: 600px;
-  width: 600px;
+  height: 450px;
+  width: 450px;
   overflow: hidden;
-  top: 414px;
-  left: -30px;
-  transform: rotate(40deg);
+  top: 480px;
+  left: 45px;
+  transform: rotate(-80deg);
   z-index: 10;
-  opacity: .7;
+  opacity: .8;
 }
 
 .btnWrapper {

@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import Wrapper from './Components//HOC/Wrapper';
 import ContactList from './Components/ContactList/ContactList';
 import ContactForm from './Components/ContactForm/ContactForm';
+import ContactService from './ContactService';
 
 export default class App extends Component {
   constructor(){
@@ -14,17 +15,23 @@ export default class App extends Component {
   }
 
 componentDidMount(){
-    this.setState({
-        contacts: this.getStateFromData()
-    });
+  this.getContacts()
 };
+
+getContacts = async () => {
+  try {
+    let dataContacts = await ContactService.get('/').then(({data}) => data);
+      this.setState({ contacts: dataContacts });
+  } catch(err) {
+    console.log(err)
+  }
+}
 
 getContactTemplate() {
     return {
       name: '',
       surname: '',
       phone: '',
-      mail: ''
     };
 };
 
@@ -50,67 +57,38 @@ onClear = () => {
   })
 };
 
-onDelete = (contact) => {
-  this.setState((state) => {
-    const contacts = state.contacts.filter((el) => el !== contact);
-      this.saveState(contacts);
-        return {
-          contacts,
-          currentContact: this.getContactTemplate()
-        };
-    });
-};
-
-deleteContact = () => {
-  return this.onDelete(this.state.currentContact);
-}
-
-onSave = (contact) => {
-    contact.id 
-      ? this.updateContact(contact)
-      : this.createContact(contact)
-    this.saveState(contact);
+createContact = async (contact) => {
+  await ContactService.post('/', contact);
+  this.getContacts();
 };
 
 addContact = (e) => {
   e.preventDefault(); 
   if( this.state.currentContact.name && this.state.currentContact.surname !== '') {
-    return this.onSave(this.state.currentContact);
+    this.onSave(this.state.currentContact);
+    this.onClear();
   }
 }
 
-createContact(contact) {
-  contact.id = Date.now();
-    this.setState((state) => {
-      const contacts = [...state.contacts, contact];
-        this.saveState(contacts);
-          return {
-            contacts,
-            currentContact: contact,
-        };
-    });
-};
+updateContact = async (contact) => {
+  await ContactService.put(`${contact.id}`, contact);
+  this.getContacts();
+}
 
-updateContact(contact) {
-  this.setState((state) => {
-    const contacts = state.contacts.map((el) => {
-      return el.id === contact.id ? contact : el
-    })
-      this.saveState(contacts);
-        return {
-          contacts,
-          currentContact: contact,
-      };
-    });
-};
 
-saveState(contacts) {
-  return localStorage.setItem('contacts', JSON.stringify(contacts));
-};
+onDelete = async (contact) => {
+  await ContactService.delete(`${contact.id}`);
+  this.getContacts();
+  this.onClear();
+}
 
-getStateFromData() {
-  const data = localStorage.getItem('contacts');
-    return data ? JSON.parse(data) : [];
+deleteContact = () => this.onDelete(this.state.currentContact);
+
+onSave = (contact) => {
+  contact.id 
+    ? this.updateContact(contact)
+    : this.createContact(contact)
+  this.getContacts();
 };
 
 render(){
