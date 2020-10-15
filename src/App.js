@@ -27,7 +27,9 @@ const getContacts = async () => {
   }
 }
 // getting contacts and watching for updates
-useEffect(() => getContacts(), [contacts, currentContact])
+useEffect(() => {
+  getContacts()
+},[contacts, currentContact])
 // Function handling all input's
 const handleInput = ({target}) => {
   const { name, value } = target;
