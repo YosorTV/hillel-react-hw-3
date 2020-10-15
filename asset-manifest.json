@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/hillel-react-hw-3/static/css/main.dcb58337.chunk.css",
-    "main.js": "/hillel-react-hw-3/static/js/main.00384d93.chunk.js",
-    "main.js.map": "/hillel-react-hw-3/static/js/main.00384d93.chunk.js.map",
+    "main.js": "/hillel-react-hw-3/static/js/main.806b540c.chunk.js",
+    "main.js.map": "/hillel-react-hw-3/static/js/main.806b540c.chunk.js.map",
     "runtime-main.js": "/hillel-react-hw-3/static/js/runtime-main.77480a7f.js",
     "runtime-main.js.map": "/hillel-react-hw-3/static/js/runtime-main.77480a7f.js.map",
-    "static/js/2.171ecb13.chunk.js": "/hillel-react-hw-3/static/js/2.171ecb13.chunk.js",
-    "static/js/2.171ecb13.chunk.js.map": "/hillel-react-hw-3/static/js/2.171ecb13.chunk.js.map",
+    "static/js/2.b684ee8b.chunk.js": "/hillel-react-hw-3/static/js/2.b684ee8b.chunk.js",
+    "static/js/2.b684ee8b.chunk.js.map": "/hillel-react-hw-3/static/js/2.b684ee8b.chunk.js.map",
     "index.html": "/hillel-react-hw-3/index.html",
-    "precache-manifest.bf496394a0e516e7ffbae7a15147306a.js": "/hillel-react-hw-3/precache-manifest.bf496394a0e516e7ffbae7a15147306a.js",
+    "precache-manifest.1af5ba23cb818a42ee94302639c8f7ec.js": "/hillel-react-hw-3/precache-manifest.1af5ba23cb818a42ee94302639c8f7ec.js",
     "service-worker.js": "/hillel-react-hw-3/service-worker.js",
     "static/css/main.dcb58337.chunk.css.map": "/hillel-react-hw-3/static/css/main.dcb58337.chunk.css.map",
-    "static/js/2.171ecb13.chunk.js.LICENSE.txt": "/hillel-react-hw-3/static/js/2.171ecb13.chunk.js.LICENSE.txt"
+    "static/js/2.b684ee8b.chunk.js.LICENSE.txt": "/hillel-react-hw-3/static/js/2.b684ee8b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.77480a7f.js",
-    "static/js/2.171ecb13.chunk.js",
+    "static/js/2.b684ee8b.chunk.js",
     "static/css/main.dcb58337.chunk.css",
-    "static/js/main.00384d93.chunk.js"
+    "static/js/main.806b540c.chunk.js"
   ]
 }
