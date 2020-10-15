@@ -1,11 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import classes from './ContactForm.module.scss'
 
-export default class ContactForm extends Component {
-
-  render() {
+const ContactForm = ({ onFormSubmit, onDelete, handleInput, contact:{name, surname, phone, id} }) => {
     return (
-    <form className={classes.ContactForm} onSubmit={this.props.onFormSubmit}>
+    <form className={classes.ContactForm} onSubmit={onFormSubmit}>
       <svg 
         viewBox="0 0 500 500" 
         xmlns="http://www.w3.org/2000/svg" 
@@ -25,8 +23,8 @@ export default class ContactForm extends Component {
             id="name"
             name="name"
             placeholder="Enter name"
-            value={this.props.contact.name}
-            onChange={this.props.handleInput}
+            value={name}
+            onChange={handleInput}
           />
           </label>
 
@@ -36,8 +34,8 @@ export default class ContactForm extends Component {
             id="surname"
             name="surname"
             placeholder="Enter surname"
-            value={this.props.contact.surname}
-            onChange={this.props.handleInput}
+            value={surname}
+            onChange={handleInput}
           />
           </label>
 
@@ -47,16 +45,16 @@ export default class ContactForm extends Component {
             id="phone"
             name="phone"
             placeholder="Enter number"
-            value={this.props.contact.phone}
-            onChange={this.props.handleInput}
+            value={phone}
+            onChange={handleInput}
           />
           </label>
         
       </div>
       <div className={classes.btnWrapper}>
         <button type="submit">Save</button>
-        {this.props.contact.id 
-          ? <button type="button" className={classes.decline} onClick={this.props.onDelete}>Delete</button>
+        {
+          id ? <button type="button" className={classes.decline} onClick={onDelete}>Delete</button>
           : ''
         }
       </div>
@@ -73,6 +71,7 @@ export default class ContactForm extends Component {
     </path>
   </svg>
       </form>
-    )
-  }
+  )
 }
+
+export default ContactForm
