@@ -1,9 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react';
 import classes from './ContactForm.module.scss'
 
-const ContactForm = ({ onFormSubmit, onDelete, handleInput, contact:{name, surname, phone, id} }) => {
+const ContactForm = ({contact: initialContact, onSave, onDelete }) => {
+const [contact, setContact] = useState(initialContact);
+
+const handleInput = ({target}) => {
+  const { name, value } = target;
+    setContact({
+      ...contact,
+      [name]: value,
+  })
+}
+
+const onContactFormSubmit = e => {
+  e.preventDefault();
+  onSave(contact);
+}
+
     return (
-    <form className={classes.ContactForm} onSubmit={onFormSubmit}>
+    <form className={classes.ContactForm} onSubmit={onContactFormSubmit}>
       <svg 
         viewBox="0 0 500 500" 
         xmlns="http://www.w3.org/2000/svg" 
@@ -23,7 +38,7 @@ const ContactForm = ({ onFormSubmit, onDelete, handleInput, contact:{name, surna
             id="name"
             name="name"
             placeholder="Enter name"
-            value={name}
+            value={contact.name}
             onChange={handleInput}
           />
           </label>
@@ -34,7 +49,7 @@ const ContactForm = ({ onFormSubmit, onDelete, handleInput, contact:{name, surna
             id="surname"
             name="surname"
             placeholder="Enter surname"
-            value={surname}
+            value={contact.surname}
             onChange={handleInput}
           />
           </label>
@@ -45,7 +60,7 @@ const ContactForm = ({ onFormSubmit, onDelete, handleInput, contact:{name, surna
             id="phone"
             name="phone"
             placeholder="Enter number"
-            value={phone}
+            value={contact.phone}
             onChange={handleInput}
           />
           </label>
@@ -54,7 +69,7 @@ const ContactForm = ({ onFormSubmit, onDelete, handleInput, contact:{name, surna
       <div className={classes.btnWrapper}>
         <button type="submit">Save</button>
         {
-          id ? <button type="button" className={classes.decline} onClick={onDelete}>Delete</button>
+          contact.id ? <button type="button" className={classes.decline} onClick={onDelete}>Delete</button>
           : ''
         }
       </div>

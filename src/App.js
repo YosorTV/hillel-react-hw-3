@@ -1,81 +1,61 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
+import { connect } from 'react-redux';
+import {setContacts, changeContact, addContact, setSelectedContact, resetSelectedContact, deleteContact } from './Store/Actions/actions';
+import ContactService from './ContactService';
 
 import Wrapper from './Components/HOC/Wrapper';
 import ContactList from './Components/ContactList/ContactList';
 import ContactForm from './Components/ContactForm/ContactForm';
-import ContactService from './ContactService';
 
-const App = () => {
-  // Function Create Contact Template
-  const getContactTemplate = () => {
-    return {
-      name: '',
-      surname: '',
-      phone: '',
-    };
-  };
-// Our local states
-  const [contacts, setContacts] = useState([]);
-  const [currentContact, setCurrentContact] = useState(getContactTemplate())
-// Getting contacts from Data
-const getContacts = async () => {
-  try {
-    let dataContacts = await ContactService.get('/').then(({data}) => data);
-    setContacts(dataContacts);
-  } catch(err) {
-    console.log(err)
-  }
-}
+function App ({contacts, 
+  selectedContact, 
+  setContacts, 
+  changeContact,
+  addContact,
+  setSelectedContact, 
+  resetSelectedContact, 
+  deleteContact}) {
+  
 // getting contacts and watching for updates
 useEffect(() => {
-  getContacts()
-},[contacts, currentContact])
-// Function handling all input's
+  ContactService.get('/').then(({ data }) => setContacts(data));
+}, [setContacts]);
+// Function choose a contact
+const onContactSelect = contact => setSelectedContact(contact);
+// Function creating new contact on server
+const createContact = contact => {
+  ContactService.post('', contact).then(({data}) => addContact(data));
+}
+
 const handleInput = ({target}) => {
   const { name, value } = target;
-  setCurrentContact({
-    ...currentContact,
-    [name]: value
+  setSelectedContact({
+      ...selectedContact,
+      [name]: value,
   })
-};
-// Function choose a contact
-const onContactSelect = (contact) => {
-  setCurrentContact(contact)
-};
-// Function cleaning Form
-const onClear = () => setCurrentContact(getContactTemplate())
-// Function creating new contact on server
-const createContact = async (contact) => {
-  await ContactService.post('/', contact);
-  getContacts();
-};
-// Function adding new contact
-const addContact = (e) => {
-  e.preventDefault(); 
-  if( currentContact.name && currentContact.surname !== '') {
-    onSave(currentContact);
-    onClear();
-  }
 }
+
 // Function updaiting contact on server
-const updateContact = async (contact) => {
-  await ContactService.put(`${contact.id}`, contact);
-    return getContacts();
+const updateContact = contact => {
+  ContactService.put(contact.id, contact);
+    changeContact(contact);
 }
 // Function delete contact from server
-const onDelete = async (contact) => {
-  await ContactService.delete(`${contact.id}`);
-  getContacts();
-  onClear();
+const onDelete = contact => {
+  ContactService.delete(contact.id);
+    deleteContact(contact.id);
 }
 // Function delete contact from UI side
-const deleteContact = () => onDelete(currentContact);
+const removeContact = () => onDelete(selectedContact);
 // Function apply new contact
-const onSave = (contact) => {
+const onSave = contact => {
   contact.id 
     ? updateContact(contact)
     : createContact(contact)
 };
+
+const onClear = () => resetSelectedContact();
+
   return (
   <Wrapper>
     <ContactList 
@@ -84,13 +64,27 @@ const onSave = (contact) => {
       onClear={onClear}
     />
     <ContactForm
-      contact={currentContact}
-      onDelete={deleteContact}
-      onFormSubmit={addContact}
+      key={selectedContact.id}
+      contact={selectedContact}
+      onDelete={removeContact}
       handleInput={handleInput}
+      onSave={onSave}
     />
     </Wrapper>
   );
 }
 
-export default App
+function mapStateToProps({contacts, selectedContact}){
+  return {contacts, selectedContact}
+}
+
+const mapDispatchToProps = {
+  setContacts,
+  changeContact,
+  addContact,
+  setSelectedContact,
+  resetSelectedContact,
+  deleteContact
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
