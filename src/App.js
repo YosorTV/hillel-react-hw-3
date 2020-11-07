@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import { connect } from 'react-redux';
-import {setContacts, changeContact, addContact, setSelectedContact, resetSelectedContact, deleteContact } from './Store/Actions/actions';
+import { setSelectedContact, resetSelectedContact, deleteContact, getContacts, saveContact } from './Store/Actions/actions';
 import ContactService from './ContactService';
 
 import Wrapper from './Components/HOC/Wrapper';
@@ -9,50 +9,27 @@ import ContactForm from './Components/ContactForm/ContactForm';
 
 function App ({contacts, 
   selectedContact, 
-  setContacts, 
-  changeContact,
-  addContact,
   setSelectedContact, 
   resetSelectedContact, 
-  deleteContact}) {
-  
+  deleteContact,
+  getContacts,
+  saveContact
+}) {  
 // getting contacts and watching for updates
 useEffect(() => {
-  ContactService.get('/').then(({ data }) => setContacts(data));
-}, [setContacts]);
+  getContacts();
+},[getContacts]);
 // Function choose a contact
 const onContactSelect = contact => setSelectedContact(contact);
-// Function creating new contact on server
-const createContact = contact => {
-  ContactService.post('', contact).then(({data}) => addContact(data));
-}
-
-const handleInput = ({target}) => {
-  const { name, value } = target;
-  setSelectedContact({
-      ...selectedContact,
-      [name]: value,
-  })
-}
-
-// Function updaiting contact on server
-const updateContact = contact => {
-  ContactService.put(contact.id, contact);
-    changeContact(contact);
-}
 // Function delete contact from server
 const onDelete = contact => {
   ContactService.delete(contact.id);
-    deleteContact(contact.id);
+    return deleteContact(contact.id);
 }
 // Function delete contact from UI side
 const removeContact = () => onDelete(selectedContact);
 // Function apply new contact
-const onSave = contact => {
-  contact.id 
-    ? updateContact(contact)
-    : createContact(contact)
-};
+const onSave = contact => saveContact(contact);
 
 const onClear = () => resetSelectedContact();
 
@@ -67,24 +44,20 @@ const onClear = () => resetSelectedContact();
       key={selectedContact.id}
       contact={selectedContact}
       onDelete={removeContact}
-      handleInput={handleInput}
       onSave={onSave}
     />
     </Wrapper>
   );
 }
 
-function mapStateToProps({contacts, selectedContact}){
-  return {contacts, selectedContact}
-}
+const mapStateToProps = ({contacts, selectedContact}) => ({contacts, selectedContact});
 
 const mapDispatchToProps = {
-  setContacts,
-  changeContact,
-  addContact,
   setSelectedContact,
   resetSelectedContact,
-  deleteContact
+  deleteContact,
+  getContacts,
+  saveContact
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

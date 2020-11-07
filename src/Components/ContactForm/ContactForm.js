@@ -69,7 +69,11 @@ const onContactFormSubmit = e => {
       <div className={classes.btnWrapper}>
         <button type="submit">Save</button>
         {
-          contact.id ? <button type="button" className={classes.decline} onClick={onDelete}>Delete</button>
+          contact.id ? 
+          <button 
+            type="button" 
+            className={classes.decline} 
+            onClick={onDelete}>Delete</button>
           : ''
         }
       </div>
